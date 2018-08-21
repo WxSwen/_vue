@@ -11,12 +11,13 @@ import {
   isValidArrayIndex,
   isServerRendering
 } from '../util/index'
-import { observe } from '../../vue/src/core/observer';
 
 
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods);
 const hasProto = '__proto__' in {};
 
+
+// 确定是否需要添加observe
 export let shouldObserve = true;
 export function toggleObserve(val) {
   shouldObserve = val;
@@ -27,9 +28,10 @@ export class Observer{
     this.vmCount = 0;
     this.dep = new Dep();
     this.value = value;
+    // 将observe保存在每个数据的__ob__中
     def(value, '__ob__', this);
     if(Array.isArray(value)) {
-      // simplify
+      // 简化数组方法继承
       value.__proto__ = arrayMethods;
       this.observeArray(value);
     } else {
@@ -37,6 +39,7 @@ export class Observer{
     }
   }
   walk(obj) {
+    // 遍历对象，添加getter和setter
     let keys = Object.keys(obj);
     for(let i = 0;i < keys.length; i++){
       defineReactive(obj, keys[i]);
@@ -44,6 +47,7 @@ export class Observer{
   }
 
   observeArray(items) {
+    // 遍历数组
     for(let i = 0, l = items.length; i < l; i++) {
       observe(items[i]);
     }
@@ -53,6 +57,7 @@ export class Observer{
 function observe(value) {
   let ob;
   if(!isObject(value)) return;
+  // 判断是否存在__ob__，存在返回__ob__；不存在递归
   if(hasOwn(value, '__ob__') && value.__ob__ instanceof Observer) {
     ob = value.__ob__;
   } else if(shouldObserve && !value._isVue){
@@ -83,6 +88,7 @@ export function defineReactive(obj, key) {
     writable: true,
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val;
+      // 通过dep.depend去收集sub
       if(Dep.target) {
         dep.depend();
         if(childOb) {
@@ -111,6 +117,7 @@ export function defineReactive(obj, key) {
 }
 
 function dependArray(value) {
+  // 数组再收集dep
   for(let e, i = 0, l = value.length; i < l; i++) {
     e = value[i];
     e && e.__ob__ && e.__ob__.dep.depend();
@@ -118,4 +125,8 @@ function dependArray(value) {
       dependArray(e);
     }
   }
+}
+
+export function set(target, key, val){
+  
 }

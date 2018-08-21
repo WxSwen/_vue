@@ -17,7 +17,7 @@ function flushSchedulerQueue() {
 
   queue.sort((a, b) => a.id - b.id);
 
-  for(index = 0; index < queue.length; i++) {
+  for(index = 0; index < queue.length; index++) {
     watcher = queue[index];
     id = watcher[id];
     has[id] = null;
