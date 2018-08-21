@@ -1,2 +1,2 @@
-# _vue
-重写core
+# vue_resource
+源码阅读
