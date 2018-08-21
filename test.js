@@ -1,16 +1,9 @@
-const Vue = require('Vue');
-
-const app = new Vue({
-  data: {
-    arr: [1,5,8],
-    obj: {
-      a: {
-        b: {
-          c: '12'
-        }
-      }
-    }
+class test{
+  constructor(){}
+  get(){
+    console.log('get')
   }
-})
+}
 
-app.$data.obj.a.b.c = 155;
+var a = new test();
+console.log(a);
